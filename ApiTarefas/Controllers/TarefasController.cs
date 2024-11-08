@@ -10,7 +10,7 @@ using ApiTarefas.Model;
 
 namespace ApiTarefas.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("/tarefas")]
     [ApiController]
     public class TarefasController : ControllerBase
     {
@@ -21,88 +21,11 @@ namespace ApiTarefas.Controllers
             _context = context;
         }
 
-        // GET: api/Tarefas
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Tarefa>>> GetTarefa()
+        public async Task<IActionResult> Index()
         {
-            return await _context.Tarefa.ToListAsync();
-        }
-
-        // GET: api/Tarefas/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Tarefa>> GetTarefa(int id)
-        {
-            var tarefa = await _context.Tarefa.FindAsync(id);
-
-            if (tarefa == null)
-            {
-                return NotFound();
-            }
-
-            return tarefa;
-        }
-
-        // PUT: api/Tarefas/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTarefa(int id, Tarefa tarefa)
-        {
-            if (id != tarefa.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(tarefa).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TarefaExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Tarefas
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Tarefa>> PostTarefa(Tarefa tarefa)
-        {
-            _context.Tarefa.Add(tarefa);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetTarefa", new { id = tarefa.Id }, tarefa);
-        }
-
-        // DELETE: api/Tarefas/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTarefa(int id)
-        {
-            var tarefa = await _context.Tarefa.FindAsync(id);
-            if (tarefa == null)
-            {
-                return NotFound();
-            }
-
-            _context.Tarefa.Remove(tarefa);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool TarefaExists(int id)
-        {
-            return _context.Tarefa.Any(e => e.Id == id);
+            var tarefas = await _context.Tarefa.ToListAsync();
+            return StatusCode(200, tarefas);
         }
     }
 }
